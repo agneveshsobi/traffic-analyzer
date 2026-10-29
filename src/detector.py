@@ -19,20 +19,21 @@ def detect_port_scans(packets):
     for (src, dst), events in syns.items():
         events.sort()
         start = 0
+        best = 0
         for end in range(len(events)):
             # shrink the window until it is at most WINDOW seconds long
             while events[end][0] - events[start][0] > WINDOW:
                 start += 1
             ports = {p for _, p in events[start:end + 1]}
-            if len(ports) >= THRESHOLD:
-                alerts.append({
-                    "type": "Port scan",
-                    "mitre": "T1046",
-                    "src": src,
-                    "dst": dst,
-                    "unique_ports": len(ports),
-                })
-                break
+            best = max(best, len(ports))
+        if best >= THRESHOLD:
+            alerts.append({
+                "type": "Port scan",
+                "mitre": "T1046",
+                "src": src,
+                "dst": dst,
+                "unique_ports": best,
+            })
     return alerts
 
 
