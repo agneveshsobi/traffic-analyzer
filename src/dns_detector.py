@@ -25,6 +25,9 @@ def detect_dns_tunneling(packets):
             labels = name.split(".")
             if len(labels) < 3:
                 continue
+            # skip Windows/Active Directory service names (_kerberos, _ldap, ...)
+            if any(label.startswith("_") for label in labels):
+                continue
             sub = ".".join(labels[:-2])   # everything before the base domain
             if len(sub) >= MIN_LABEL_LEN and entropy(sub) >= ENTROPY_LIMIT:
                 hits[(pkt[IP].src, ".".join(labels[-2:]))].append(sub)
