@@ -9,6 +9,7 @@ suspicious behavior. Built with Scapy as a cybersecurity learning project.
 |---|---|---|
 | Port scan | One host sends SYNs to 20+ ports within 10 seconds | T1046 |
 | DNS tunneling | Long, high-entropy subdomains queried repeatedly | T1071.004 |
+| Beaconing | Same host contacts the same server at regular intervals (8+ connections, gaps within 20% of average) | T1071 |
    | Beaconing | Same host contacts the same server at regular intervals (8+ connections, gaps within 20% of average) | T1071 |
 
 ## How it works
@@ -30,6 +31,7 @@ pcap file -> parser.py (decode packets) -> detectors -> alerts
 | Synthetic DNS tunnel (20 queries) | DNS tunneling alert | Detected (synthetic data) |
 | Normal traffic | No DNS alert | No false positive |
 | Real capture (malware-traffic-analysis.net, 2026-10-01) | No port scan | No alert |
+| Synthetic beacon (15 connections, ~60s apart) | Beaconing alert | Detected (synthetic data) |
    | Synthetic beacon (15 connections, ~60s apart) | Beaconing alert | Detected (synthetic data) |
 
 ## Real-data testing: a false positive found and fixed
