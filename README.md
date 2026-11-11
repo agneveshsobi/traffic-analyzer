@@ -19,8 +19,7 @@ pcap file -> parser.py (decode packets) -> detectors -> alerts
 ## Usage
 
     pip install scapy
-    python src/detector.py data/portscan.pcapng
-    python src/dns_detector.py data/dns_tunnel.pcap
+    python src/analyzer.py data/portscan.pcapng
 
 ## Results
 
