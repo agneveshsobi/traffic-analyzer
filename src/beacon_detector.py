@@ -3,10 +3,12 @@ import statistics
 from collections import defaultdict
 from scapy.all import rdpcap
 from parser import parse_packet
+from config import load_config
+CFG = load_config()
 
-MIN_CONNECTIONS = 8    # need at least this many connections to judge
-MAX_VARIATION = 0.2    # gaps must be within about 20% of the average gap
-MIN_INTERVAL = 5       # ignore very fast repeats (seconds)
+MIN_CONNECTIONS = CFG['beaconing']['min_connections']
+MAX_VARIATION = CFG['beaconing']['max_variation']
+MIN_INTERVAL = CFG['beaconing']['min_interval']
 
 
 def detect_beaconing(packets):

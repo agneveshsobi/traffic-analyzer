@@ -2,9 +2,11 @@ import sys
 from collections import defaultdict
 from scapy.all import rdpcap
 from parser import parse_packet
+from config import load_config
+CFG = load_config()
 
-THRESHOLD = 20   # unique ports needed to raise an alert
-WINDOW = 10      # seconds
+THRESHOLD = CFG['port_scan']['threshold']
+WINDOW = CFG['port_scan']['window']
 
 
 def detect_port_scans(packets):

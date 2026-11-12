@@ -1,0 +1,13 @@
+port_scan:
+  threshold: 20        # unique ports needed to alert
+  window: 10           # seconds
+
+dns_tunneling:
+  min_label_len: 25    # subdomain length considered suspicious
+  entropy_limit: 3.5   # randomness score
+  min_hits: 5          # suspicious queries before alerting
+
+beaconing:
+  min_connections: 8   # connections needed to judge
+  max_variation: 0.2   # gaps within 20% of the average
+  min_interval: 5      # ignore repeats faster than this (seconds)

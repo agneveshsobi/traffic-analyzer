@@ -2,10 +2,12 @@ import sys
 import math
 from collections import Counter, defaultdict
 from scapy.all import rdpcap, DNS, DNSQR, IP
+from config import load_config
+CFG = load_config()
 
-MIN_LABEL_LEN = 25      # subdomain length considered suspicious
-ENTROPY_LIMIT = 3.5     # randomness score (bits per character)
-MIN_HITS = 5            # suspicious queries needed before alerting
+MIN_LABEL_LEN = CFG['dns_tunneling']['min_label_len']
+ENTROPY_LIMIT = CFG['dns_tunneling']['entropy_limit']
+MIN_HITS = CFG['dns_tunneling']['min_hits']
 
 
 def entropy(text):
