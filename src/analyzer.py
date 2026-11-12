@@ -1,4 +1,5 @@
-import sys
+import argparse
+import json
 from scapy.all import rdpcap
 from detector import detect_port_scans
 from dns_detector import detect_dns_tunneling
@@ -11,13 +12,18 @@ DETECTORS = [
 ]
 
 
-def main(path):
-    packets = rdpcap(path)
-    print(f"Analyzing {path} ({len(packets)} packets)\n")
-    total = 0
+def main():
+    parser = argparse.ArgumentParser(description="Analyze a pcap for suspicious traffic.")
+    parser.add_argument("capture", help="path to a .pcap or .pcapng file")
+    parser.add_argument("--json", metavar="FILE", help="also save alerts to a JSON file")
+    args = parser.parse_args()
+
+    packets = rdpcap(args.capture)
+    print(f"Analyzing {args.capture} ({len(packets)} packets)\n")
+    all_alerts = []
     for name, run in DETECTORS:
         alerts = run(packets)
-        total += len(alerts)
+        all_alerts.extend(alerts)
         if not alerts:
             print(f"[ok]    {name}: nothing found")
         for a in alerts:
@@ -25,11 +31,13 @@ def main(path):
                 f"{k}={v}" for k, v in a.items() if k not in ("type", "mitre")
             )
             print(f"[ALERT] {a['type']} ({a['mitre']}): {details}")
-    print(f"\nDone. {total} alert(s).")
+    print(f"\nDone. {len(all_alerts)} alert(s).")
+
+    if args.json:
+        with open(args.json, "w") as f:
+            json.dump(all_alerts, f, indent=2)
+        print(f"Saved alerts to {args.json}")
 
 
 if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        print("Usage: python src/analyzer.py <capture.pcap>")
-        sys.exit(1)
-    main(sys.argv[1])
+    main()
